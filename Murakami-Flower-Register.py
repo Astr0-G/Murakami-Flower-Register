@@ -23,38 +23,12 @@ def murakami():
     executable_path = "/webdrivers"
     os.environ["webdriver.chrome.driver"] = executable_path
     options = Options()
-    options.add_extension('anticaptcha-plugin_v0.62.crx')
-    options.add_extension('extension_9_2_1_0.crx')
+    options.add_extension('anticaptcha.crx')
+    options.add_extension('extension.crx')
     use_email = create_catchall_email()
-    if use_proxies == "False":
-        option = webdriver.ChromeOptions()
-        option.add_experimental_option('useAutomationExtension', False)
-        option.add_experimental_option("excludeSwitches", ["enable-logging"])
-        option.add_argument('--disable-blink-features=AutomationControlled')
-        driver = webdriver.Chrome(options=option)
-
-    if use_proxies == "True":
-        proxy_list = load_new_proxy_list()
-        try:
-            proxy = random.choice(proxy_list)
-        except:
-            time.sleep(10)
-        proxy_host, proxy_port, proxy_username, proxy_password = proxy.split(':')
-        sProxy = create_proxyauth_extension(proxy_host, proxy_port, proxy_username, proxy_password)
-        options.add_extension(sProxy)
-        userAgent = get_user_agent()
-        options.add_argument("user-agent=" + userAgent)
-        options.add_experimental_option('useAutomationExtension', False)
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        options.add_argument('--disable-blink-features=AutomationControlled')
-
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
     driver = webdriver.Chrome(options=options)
     try:
-        driver.get('https://google.com')
         driver.get("chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#initialize/welcome")
-        driver.close()
-        driver.switch_to.window(driver.window_handles[0])
         print("creating Metamask account...")
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,
